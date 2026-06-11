@@ -1,0 +1,103 @@
+#!/bin/bash
+
+while true
+do
+echo "================================="
+echo "     LINUX DEVOPS DASHBOARD"
+echo "================================="
+echo "1. System Monitoring"
+echo "2. User Management"
+echo "3. Backup Directory"
+echo "4. Check Services"
+echo "5. Exit"
+echo "================================="
+
+read -p "Enter Choice: " choice
+
+case $choice in
+
+1)
+echo "----- SYSTEM MONITORING -----"
+
+echo "CPU Usage:"
+top -bn1 | grep "Cpu"
+
+echo
+echo "Memory Usage:"
+free -h
+
+echo
+echo "Disk Usage:"
+df -h
+
+;;
+
+2)
+echo "----- USER MANAGEMENT -----"
+echo "1. Create User"
+echo "2. Delete User"
+
+read -p "Enter option: " userchoice
+
+if [ $userchoice -eq 1 ]
+then
+read -p "Enter Username: " username
+sudo useradd $username
+echo "User Created Successfully"
+
+elif [ $userchoice -eq 2 ]
+then
+read -p "Enter Username: " username
+sudo userdel $username
+echo "User Deleted Successfully"
+fi
+
+;;
+
+3)
+echo "----- BACKUP SYSTEM -----"
+
+read -p "Enter Folder Path: " folder
+
+backup_name="backup_$(date +%Y%m%d_%H%M%S).tar.gz"
+
+tar -czf $backup_name $folder
+
+if [ $? -eq 0 ]
+then
+echo "Backup Created: $backup_name"
+else
+echo "Backup Failed!"
+fi
+
+;;
+
+4)
+echo "----- SERVICE STATUS -----"
+
+echo "SSH Service:"
+systemctl is-active ssh
+
+echo
+echo "Apache Service:"
+systemctl is-active apache2
+
+;;
+
+5)
+echo "Exiting..."
+exit
+
+;;
+
+*)
+echo "Invalid Choice"
+;;
+
+esac
+
+echo
+read -p "Press Enter To Continue..."
+clear
+
+done
